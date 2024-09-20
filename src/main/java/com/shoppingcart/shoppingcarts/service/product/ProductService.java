@@ -95,17 +95,17 @@ public class ProductService  implements InterfaceProductService{
 
     @Override
     public List<Product> getProductByBrand(String brand) {
-        return productRepository.findByBrandName(brand);
+        return productRepository.findByBrand(brand);
     }
 
     @Override
     public List<Product> getProductsByCategoryAndBrand(String category, String brand) {
-        return productRepository.findByCategoryAndBrand(category, brand);
+        return productRepository.findByCategory_NameAndBrand(category, brand);
     }
 
     @Override
-    public List<Product> getProductsByName(String name) {
-        return productRepository.findByName(name);
+    public List<Product> getProductsByName(String brandName) {
+        return productRepository.findByName(brandName);
     }
 
     @Override
