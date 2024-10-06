@@ -1,5 +1,6 @@
 package com.shoppingcart.shoppingcarts.service.product;
 
+import com.shoppingcart.shoppingcarts.dto.ProductDto;
 import com.shoppingcart.shoppingcarts.model.Product;
 import com.shoppingcart.shoppingcarts.request.AddProductRequest;
 import com.shoppingcart.shoppingcarts.request.ProductUpdateRequest;
@@ -20,4 +21,7 @@ public interface InterfaceProductService {
     List<Product> getProductsByBrandAndName(String brand, String name);
     Long countProductsByBrandAndName(String brand, String name);
 
+    List<ProductDto> getConvertedProducts(List<Product> products);
+
+    ProductDto convertToDto(Product product);
 }

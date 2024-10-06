@@ -49,11 +49,11 @@ public class ImageService implements InterfaceImageService {
             try{
                 Image image = new Image();
                 image.setFileName(file.getOriginalFilename());
-                image.setFileName(file.getContentType());
+                image.setFileType(file.getContentType());
                 image.setImage(new SerialBlob((file.getBytes())));
                 image.setProduct(product);
 
-                String buildDownloadUrl = "/api/v1/images/image/download/";
+                String buildDownloadUrl = "/rest/v1/images/images/download/";
                 String downloadUrl = buildDownloadUrl + image.getId();
                 image.setDownloadUrl(downloadUrl);
                 imageRepository.save(image);
@@ -63,8 +63,8 @@ public class ImageService implements InterfaceImageService {
                 imageRepository.save(saveImage);
 
                 ImageDto imageDto = new ImageDto();
-                imageDto.setImageId((long) saveImage.getId());
-                imageDto.setImageName(saveImage.getFileName());
+                imageDto.setId((long) saveImage.getId());
+                imageDto.setFileName(saveImage.getFileName());
                 imageDto.setDownloadUrl(saveImage.getDownloadUrl());
                 savedImageDto.add(imageDto);
 

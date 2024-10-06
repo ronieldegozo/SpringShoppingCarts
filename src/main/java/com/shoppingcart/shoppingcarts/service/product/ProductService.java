@@ -1,13 +1,20 @@
 package com.shoppingcart.shoppingcarts.service.product;
 
+import com.shoppingcart.shoppingcarts.dto.ImageDto;
+import com.shoppingcart.shoppingcarts.dto.ProductDto;
 import com.shoppingcart.shoppingcarts.exceptions.ProductNotFoundException;
 import com.shoppingcart.shoppingcarts.model.Category;
+import com.shoppingcart.shoppingcarts.model.Image;
 import com.shoppingcart.shoppingcarts.model.Product;
 import com.shoppingcart.shoppingcarts.repository.CategoryRepository;
+import com.shoppingcart.shoppingcarts.repository.ImageRepository;
 import com.shoppingcart.shoppingcarts.repository.ProductRepository;
 import com.shoppingcart.shoppingcarts.request.AddProductRequest;
 import com.shoppingcart.shoppingcarts.request.ProductUpdateRequest;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,10 +26,15 @@ public class ProductService  implements InterfaceProductService{
 
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
+    private final ModelMapper modelMapper;
+    private final ImageRepository imageRepository;
+
+    private static final Logger log = LoggerFactory.getLogger(ProductService.class);
+
 
     @Override
     public Product addProduct(AddProductRequest request) {
-        //Check if cateogry is found in the Database
+        //Check if category is found in the Database
 
         //if yes add the product to the database
 
@@ -39,14 +51,15 @@ public class ProductService  implements InterfaceProductService{
         return productRepository.save(createProduct(request, category));
     }
 
-    private Product createProduct(AddProductRequest request, Category category){
-        return new Product(request.getName(),
-                    request.getBrand(),
-                    request.getPrice(),
-                    request.getInventory(),
-                    request.getDescription(),
+    private Product createProduct(AddProductRequest request, Category category) {
+        return new Product(
+                request.getName(),
+                request.getBrand(),
+                request.getPrice(),
+                request.getInventory(),
+                request.getDescription(),
                 category
-                );
+        );
     }
 
     @Override
@@ -85,6 +98,7 @@ public class ProductService  implements InterfaceProductService{
 
     @Override
     public List<Product> getAllProducts() {
+        log.info("Products retrieved!");
         return productRepository.findAll();
     }
 
@@ -117,4 +131,21 @@ public class ProductService  implements InterfaceProductService{
     public Long countProductsByBrandAndName(String brand, String name) {
         return productRepository.countByBrandAndName(brand, name);
     }
+
+    @Override
+    public List<ProductDto> getConvertedProducts (List<Product> products) {
+        return products.stream().map(this::convertToDto).toList();
+    }
+
+    @Override
+    public ProductDto convertToDto(Product product){
+        ProductDto productDto = modelMapper.map(product, ProductDto.class);
+        List<Image> images = imageRepository.findByProductId(product.getId());
+
+        List<ImageDto>  imagesDto = images.stream().map(image -> modelMapper.map(image, ImageDto.class)).toList();
+
+        productDto.setImages(imagesDto);
+        return productDto;
+    }
+
 }
