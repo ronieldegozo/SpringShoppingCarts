@@ -24,6 +24,10 @@ public class ProductController {
 
     private final InterfaceProductService productService;
 
+    /*
+    Get All Products
+    http://localhost:5000/rest/v1/products/all
+    */
     @GetMapping("/all")
     public ResponseEntity<ApiResponse> getAllProducts (){
         try {
@@ -36,6 +40,10 @@ public class ProductController {
         }
     }
 
+    /*
+    Get Product by id
+    http://localhost:5000/rest/v1/products/product/7/product
+    */
     @GetMapping("/product/{productId}/product")
     public ResponseEntity<ApiResponse> getProductById (@PathVariable Long productId){
         try {
@@ -48,7 +56,10 @@ public class ProductController {
         }
     }
 
-
+    /*
+    Add/Create new Product
+    http://localhost:5000/rest/v1/products/add
+    */
     @PostMapping("/add")
     public ResponseEntity<ApiResponse> addProduct (@RequestBody AddProductRequest product){
         try {
@@ -99,16 +110,20 @@ public class ProductController {
         }
     }
 
-
-    @GetMapping("/product/by/category-and-brand")
-    public ResponseEntity<ApiResponse> getProductByCategoryAndBrand (@PathVariable String category, @PathVariable String productId, @PathVariable String brand){
+    /*
+    Get Product By Category and Brand
+    http://localhost:5000/rest/v1/products/product/TV?brand=Samsung
+    */
+    @GetMapping("/product/{category}")
+    public ResponseEntity<ApiResponse> getProductByCategoryAndBrand (@PathVariable String category, @RequestParam String brand){
         try {
             List<Product> products = productService.getProductsByCategoryAndBrand(category,brand);
-            if(products.isEmpty()){
+            List<ProductDto> convertedProduct = productService.getConvertedProducts(products);
+            if(convertedProduct.isEmpty()){
                 return ResponseEntity.status(NOT_FOUND)
                         .body(new ApiResponse("Get Product Category and Brand -> Product Not Found!", null));
             }
-            return  ResponseEntity.ok(new ApiResponse("Product by Category and Brand Found!", products));
+            return  ResponseEntity.ok(new ApiResponse("Product by Category and Brand Found!", convertedProduct));
 
         } catch (Exception e) {
             return ResponseEntity.status(INTERNAL_SERVER_ERROR)
@@ -134,7 +149,11 @@ public class ProductController {
     }
 
 
-    @GetMapping("/product/by-brand")
+    /*
+    Get Product By Brand
+    http://localhost:5000/rest/v1/products/product?brand=Ios
+    */
+    @GetMapping("/product")
     public ResponseEntity<ApiResponse> getProductByBrand (@RequestParam String brand){
         try {
             List<Product> products = productService.getProductByBrand(brand);
@@ -168,7 +187,12 @@ public class ProductController {
         }
     }
 
-    @GetMapping("/product/count/by-brand/and-name")
+
+    /*
+    Get Count producy by brand and name
+    http://localhost:5000/rest/v1/products/product/count?brand=ios&name=Iphone 15
+    */
+    @GetMapping("/product/count")
     public ResponseEntity<ApiResponse> countProductsByBrandAndName (@RequestParam String brand, @RequestParam String name){
         try {
             var productCount = productService.countProductsByBrandAndName(brand, name);
@@ -178,6 +202,5 @@ public class ProductController {
                     .body(new ApiResponse(e.getMessage(), null));
         }
     }
-
 
 }
