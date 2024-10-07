@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.math.BigDecimal;
+import java.util.HashSet;
 import java.util.Set;
 
 @Getter
@@ -22,7 +23,15 @@ public class Cart {
     //One cart belongs to many Items
     //Cascade all means if the Cart has been deleted all the cart items will be deleted and the cart items will be deleted
     @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<CartItems> cartItems;
+    private Set<CartItems> cartItems = new HashSet<>();
 
-
+    private void updateTotalAmount() {
+        this.totalAmount = cartItems.stream().map(item -> {
+            BigDecimal unitPrice = item.getUnitPrice();
+            if (unitPrice == null) {
+                return  BigDecimal.ZERO;
+            }
+            return unitPrice.multiply(BigDecimal.valueOf(item.getQuantity()));
+        }).reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
 }
