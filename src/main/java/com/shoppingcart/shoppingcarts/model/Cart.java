@@ -34,4 +34,16 @@ public class Cart {
             return unitPrice.multiply(BigDecimal.valueOf(item.getQuantity()));
         }).reduce(BigDecimal.ZERO, BigDecimal::add);
     }
+
+    public void addItem(CartItems item) {
+        this.cartItems.add(item);
+        item.setCart(this);
+        updateTotalAmount();
+    }
+
+    public void removeItem(CartItems item) {
+        this.cartItems.remove(item);
+        item.setCart(null);
+        updateTotalAmount();
+    }
 }
