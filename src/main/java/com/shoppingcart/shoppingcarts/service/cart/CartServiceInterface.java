@@ -9,5 +9,5 @@ public interface CartServiceInterface {
     Cart getCart(Long id);
     void clearCart(Long id);
     BigDecimal getTotalPrice(Long id);
-
+    Long initializeNewCart();
 }

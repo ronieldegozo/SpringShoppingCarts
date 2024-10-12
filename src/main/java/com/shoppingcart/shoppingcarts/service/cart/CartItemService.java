@@ -71,14 +71,17 @@ public class CartItemService implements CartItemServiceInterface{
         //Get cart by id
         Cart cart = cartService.getCart(cartId);
         cart.getCartItems().stream()
-                .filter(cartItems -> cartItems.getProduct().getId().equals(productId))
+                .filter(item -> item.getProduct().getId().equals(productId))
                 .findFirst()
                 .ifPresent(item -> {
                     item.setQuantity(quantity);
                     item.setUnitPrice(item.getProduct().getPrice());
                     item.setTotalPrice();
                 });
-        BigDecimal totalAmount = cart.getTotalAmount();
+        BigDecimal totalAmount = cart.getCartItems()
+                .stream()
+                .map(CartItems::getTotalPrice)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
         cart.setTotalAmount(totalAmount);
         cartRepository.save(cart);
     }
