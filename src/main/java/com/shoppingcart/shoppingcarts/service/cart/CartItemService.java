@@ -1,5 +1,6 @@
 package com.shoppingcart.shoppingcarts.service.cart;
 
+import com.shoppingcart.shoppingcarts.exceptions.ResouseNotFoundException;
 import com.shoppingcart.shoppingcarts.model.Cart;
 import com.shoppingcart.shoppingcarts.model.CartItems;
 import com.shoppingcart.shoppingcarts.model.Product;
@@ -8,6 +9,8 @@ import com.shoppingcart.shoppingcarts.repository.CartRepository;
 import com.shoppingcart.shoppingcarts.service.product.InterfaceProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.math.BigDecimal;
 
 @Service
 @RequiredArgsConstructor
@@ -20,7 +23,7 @@ public class CartItemService implements CartItemServiceInterface{
 
 
     @Override
-    public void addItemToCart(Long id, Long productId, int quantity) {
+    public void addItemToCart(Long cartId, Long productId, int quantity) {
         //1. Get cart
         //2. Get Product
         //3. Check if the product is already existing in cart
@@ -28,9 +31,9 @@ public class CartItemService implements CartItemServiceInterface{
         //5. If not, create a new cart item entry.
 
         //Get cart by id
-        Cart cart = cartService.getCart(id);
+        Cart cart = cartService.getCart(cartId);
         //Get Product by id
-        Product product = productService.getProductById(id);
+        Product product = productService.getProductById(productId);
 
         CartItems cartItem = cart.getCartItems()
                 .stream()
@@ -54,12 +57,39 @@ public class CartItemService implements CartItemServiceInterface{
     }
 
     @Override
-    public void removeItemFromCart(Long id, Long productId) {
+    public void removeItemFromCart(Long cartId, Long productId) {
+        Cart cart = cartService.getCart(cartId);
 
+        CartItems cartItem = getCartItem(cartId, productId);
+
+        cart.removeItem(cartItem);
+        cartRepository.save(cart);
     }
 
     @Override
-    public void updateItemQuantity(Long id, Long productId, int quantit, int quantity) {
+    public void updateItemQuantity(Long cartId, Long productId, int quantity) {
+        //Get cart by id
+        Cart cart = cartService.getCart(cartId);
+        cart.getCartItems().stream()
+                .filter(cartItems -> cartItems.getProduct().getId().equals(productId))
+                .findFirst()
+                .ifPresent(item -> {
+                    item.setQuantity(quantity);
+                    item.setUnitPrice(item.getProduct().getPrice());
+                    item.setTotalPrice();
+                });
+        BigDecimal totalAmount = cart.getTotalAmount();
+        cart.setTotalAmount(totalAmount);
+        cartRepository.save(cart);
+    }
 
+    @Override
+    public CartItems getCartItem(Long cartId, Long productId){
+        Cart cart = cartService.getCart(cartId);
+        return cart.getCartItems()
+                .stream()
+                .filter(item -> item.getProduct().getId().equals(productId))
+                .findFirst()
+                .orElseThrow(() -> new ResouseNotFoundException("Product not found"));
     }
 }
