@@ -24,22 +24,13 @@ public class CartItemService implements CartItemServiceInterface{
 
     @Override
     public void addItemToCart(Long cartId, Long productId, int quantity) {
-        //1. Get cart
-        //2. Get Product
-        //3. Check if the product is already existing in cart
-        //4. If exist, just increate the quantity of the items
-        //5. If not, create a new cart item entry.
-
-        //Get cart by id
         Cart cart = cartService.getCart(cartId);
-        //Get Product by id
         Product product = productService.getProductById(productId);
 
         CartItems cartItem = cart.getCartItems()
                 .stream()
                 .filter(item -> item.getProduct().getId().equals(productId))
                 .findFirst().orElse(new CartItems());
-
 
         if(cartItem.getId() == null){
             cartItem.setCart(cart);
