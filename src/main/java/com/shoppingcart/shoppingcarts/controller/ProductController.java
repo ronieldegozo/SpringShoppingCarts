@@ -9,6 +9,7 @@ import com.shoppingcart.shoppingcarts.request.ProductUpdateRequest;
 import com.shoppingcart.shoppingcarts.response.ApiResponse;
 import com.shoppingcart.shoppingcarts.service.product.InterfaceProductService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,11 +25,12 @@ public class ProductController {
 
     private final InterfaceProductService productService;
 
-    /*
-    Get All Products
-    http://localhost:5000/rest/v1/products/all
-    */
-    @GetMapping("/all")
+    /**
+     * Get All Products
+     * Endpoint: http://localhost:5000/rest/v1/products
+     * @return ResponseEntity containing a list of products
+     */
+    @GetMapping
     public ResponseEntity<ApiResponse> getAllProducts (){
         try {
             List<Product> products = productService.getAllProducts();
@@ -40,11 +42,12 @@ public class ProductController {
         }
     }
 
-    /*
-    Get Product by id
-    http://localhost:5000/rest/v1/products/product/7/product
-    */
-    @GetMapping("/product/{productId}/product")
+    /**
+     * Get product byId
+     * Endpoint: http://localhost:5000/rest/v1/products/<>productId>
+     * @return ResponseEntity containing a specific product
+     */
+    @GetMapping("/{productId}")
     public ResponseEntity<ApiResponse> getProductById (@PathVariable Long productId){
         try {
             Product product = productService.getProductById(productId);
@@ -56,15 +59,17 @@ public class ProductController {
         }
     }
 
-    /*
-    Add/Create new Product
-    http://localhost:5000/rest/v1/products/add
-    */
-    @PostMapping("/add")
+    /**
+     * Add a New Product
+     * Endpoint: http://localhost:5000/rest/v1/products
+     * @param product Product data
+     * @return ResponseEntity with the status of the operation
+     */
+    @PostMapping
     public ResponseEntity<ApiResponse> addProduct (@RequestBody AddProductRequest product){
         try {
-            Product products = productService.addProduct(product);
-            return  ResponseEntity.ok(new ApiResponse("Add Product Success!", products));
+            Product createdProduct = productService.addProduct(product);
+            return ResponseEntity.status(HttpStatus.CREATED).body(new ApiResponse("Add Product Success!", createdProduct));
         } catch (Exception e) {
             return ResponseEntity.status(INTERNAL_SERVER_ERROR)
                     .body(new ApiResponse("Cannot Add Product!", null));
@@ -170,8 +175,14 @@ public class ProductController {
         }
     }
 
-    @GetMapping("/product/{category}/all/products")
-    public ResponseEntity<ApiResponse> getProductByCategory (@PathVariable String category){
+    /**
+     * Get all products base on category name
+     * Endpoint: http://localhost:5000/rest/v1/products/category/gadgets
+     * @param category
+     * @return ResponseEntity containing a specific product
+     */
+    @GetMapping("/category/{category}")
+    public ResponseEntity<ApiResponse> getProductByCategoryName (@PathVariable String category){
         try {
             List<Product> products = productService.getProductsByCategory(category);
             List<ProductDto> convertedProduct = productService.getConvertedProducts(products);
@@ -188,11 +199,14 @@ public class ProductController {
     }
 
 
-    /*
-    Get Count producy by brand and name
-    http://localhost:5000/rest/v1/products/product/count?brand=ios&name=Iphone 15
-    */
-    @GetMapping("/product/count")
+    /**
+     * Get total count of Product by brand and name
+     * Endpoint: http://localhost:5000/rest/v1/products/count?brand=ios&name=Iphone 15
+     * @param brand
+     * @param name
+     * @return ResponseEntity containing a specific product
+     */
+    @GetMapping("/count")
     public ResponseEntity<ApiResponse> countProductsByBrandAndName (@RequestParam String brand, @RequestParam String name){
         try {
             var productCount = productService.countProductsByBrandAndName(brand, name);

@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -27,31 +28,44 @@ public class ImageController {
 
     private final InterfaceImageService imageService;
 
-    //Uploading Images
-    @PostMapping("/upload")
-    public ResponseEntity<ApiResponse> saveImages(@RequestParam List<MultipartFile> files, @RequestParam Long productId){
+    /**
+     * Add a Image into a Product base on productId
+     * Endpoint: http://localhost:5000/rest/v1/images?product=productId
+     * @return ResponseEntity with the status of the operation
+     */
+    @PostMapping("/{productId}")
+    public ResponseEntity<ApiResponse> saveImagesInProductId (@RequestParam List<MultipartFile> files, @PathVariable Long productId){
         try {
             List<ImageDto> images = imageService.saveImages(files, productId);
-
-            return ResponseEntity.ok(new ApiResponse("Images Upload successfully!", images));
+            return ResponseEntity.status(HttpStatus.CREATED).body(new ApiResponse("Image already attach in Product!", images));
         } catch (Exception e) {
             return ResponseEntity.status(INTERNAL_SERVER_ERROR)
                     .body(new ApiResponse("Images Upload failed", e.getMessage()));
         }
     }
 
-    //Download Image
-    @GetMapping("/images/download/{imageId}")
+    /**
+     * Get Image by Id
+     * Endpoint: http://localhost:5000/rest/v1/images?1
+     * @param imageId Image Id
+     * @return ResponseEntity with the status of the operation
+     */
+    @GetMapping("/{imageId}")
     public ResponseEntity<Resource> downloadImage(@PathVariable Long imageId) throws SQLException {
         Image image = imageService.getImageById(imageId);
         ByteArrayResource resource = new ByteArrayResource(image.getImage().getBytes(1, (int) image.getImage().length()));
-
-        return  ResponseEntity.ok().contentType(MediaType.parseMediaType(image.getFileType()))
+        return  ResponseEntity.status(HttpStatus.FOUND).contentType(MediaType.parseMediaType(image.getFileType()))
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" +image.getFileName() + "\"")
                 .body(resource);
     }
 
-    @PutMapping("/image/{imageId}/update")
+    /**
+     * Update Image by ImageId
+     * Endpoint: http://localhost:5000/rest/v1/images?1
+     * @param imageId Image Id
+     * @return ResponseEntity with the status of the operation
+     */
+    @PutMapping("/{imageId}")
     public ResponseEntity<ApiResponse> updateImage (@PathVariable Long imageId, @RequestBody MultipartFile file){
         try {
             Image image = imageService.getImageById(imageId);
