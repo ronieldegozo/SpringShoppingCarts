@@ -1,5 +1,6 @@
 package com.shoppingcart.shoppingcarts.controller;
 
+import com.shoppingcart.shoppingcarts.exceptions.CartNotFoundException;
 import com.shoppingcart.shoppingcarts.exceptions.ProductNotFoundException;
 import com.shoppingcart.shoppingcarts.model.Cart;
 import com.shoppingcart.shoppingcarts.response.ApiResponse;
@@ -49,7 +50,7 @@ public class CartController {
         try {
             BigDecimal totalPrice = cartService.getTotalPrice(cartId);
             return ResponseEntity.ok(new ApiResponse("Total Price : ", totalPrice));
-        } catch (ProductNotFoundException e) {
+        } catch (CartNotFoundException e) {
             return ResponseEntity.status(NOT_FOUND)
                     .body(new ApiResponse(e.getMessage(), null));
         }
