@@ -25,7 +25,7 @@ public class CartService implements CartServiceInterface{
     public Cart getCart(Long id) {
 
         Cart cart = cartRepository.findById(id)
-                .orElseThrow(() -> new CartNotFoundException("Cart not found!"));
+                .orElseThrow(() -> new CartNotFoundException("Cart not found for ID: " + id));
         BigDecimal totalAmount = cart.getTotalAmount();
         cart.setTotalAmount(totalAmount);
         return cartRepository.save(cart);

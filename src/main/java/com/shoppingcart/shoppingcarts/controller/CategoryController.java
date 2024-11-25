@@ -1,6 +1,7 @@
 package com.shoppingcart.shoppingcarts.controller;
 
 import com.shoppingcart.shoppingcarts.exceptions.AlreadyExistsException;
+import com.shoppingcart.shoppingcarts.exceptions.InvalidRequest;
 import com.shoppingcart.shoppingcarts.exceptions.ResouseNotFoundException;
 import com.shoppingcart.shoppingcarts.model.Category;
 import com.shoppingcart.shoppingcarts.response.ApiResponse;
@@ -20,13 +21,16 @@ public class CategoryController {
 
     private final InterfaceCategoryService categoryService;
 
+    private static final String CATEGORY_NAME_REGEX = "^[a-zA-Z\\s]+$"; // Only alphabetic characters and spaces allowed
+
+
     @GetMapping("/all")
     public ResponseEntity<ApiResponse> getAllServices(){
         try {
             List<Category> categories = categoryService.getAllCategories();
             return  ResponseEntity.ok(new ApiResponse("Categories Found!", categories));
         } catch (Exception e) {
-            return ResponseEntity.status(INTERNAL_SERVER_ERROR)
+            return ResponseEntity.status(NOT_FOUND)
                     .body(new ApiResponse("Can't find Categories", e.getMessage()));
         }
     }
@@ -34,6 +38,12 @@ public class CategoryController {
     @PostMapping("/add")
     public ResponseEntity<ApiResponse> addCategory(@RequestBody Category name){
         try {
+            String categoryName = name.getName();
+
+            if (!categoryName.matches(CATEGORY_NAME_REGEX) || categoryName.length() < 4) {
+                throw new InvalidRequest("Invalid category payload: " + categoryName);
+            }
+
             Category theCategory = categoryService.addCategory(name);
             return ResponseEntity.ok(new ApiResponse("Category added successfully!", theCategory));
         } catch (AlreadyExistsException e) {
