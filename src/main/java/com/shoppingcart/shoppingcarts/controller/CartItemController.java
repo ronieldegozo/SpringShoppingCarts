@@ -2,6 +2,7 @@ package com.shoppingcart.shoppingcarts.controller;
 
 import com.shoppingcart.shoppingcarts.exceptions.ProductNotFoundException;
 import com.shoppingcart.shoppingcarts.request.CartItemRequest;
+import com.shoppingcart.shoppingcarts.request.UpdateCartItemRequest;
 import com.shoppingcart.shoppingcarts.response.ApiResponse;
 import com.shoppingcart.shoppingcarts.service.cart.CartItemServiceInterface;
 import com.shoppingcart.shoppingcarts.service.cart.CartServiceInterface;
@@ -58,10 +59,10 @@ public class CartItemController {
         }
     }
 
-    @PutMapping("/{cartId}/item/{itemId}/updateitem")
-    public ResponseEntity<ApiResponse> updateItemQuantity(@PathVariable Long cartId, @PathVariable Long itemId, @RequestParam Integer quantity) {
+    @PutMapping("/update")
+    public ResponseEntity<ApiResponse> updateItemQuantity(@RequestBody UpdateCartItemRequest updateCartItemRequest) {
         try {
-            cartItemService.updateItemQuantity(cartId, itemId, quantity);
+            cartItemService.updateItemQuantity(updateCartItemRequest.getCartId(), updateCartItemRequest.getProductId(), updateCartItemRequest.getQuantity());
             return ResponseEntity.ok(new ApiResponse("Update Item Quantity Success!", null));
         } catch (ProductNotFoundException e) {
             return ResponseEntity.status(NOT_FOUND)

@@ -1,10 +1,7 @@
 package com.shoppingcart.shoppingcarts.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.math.BigDecimal;
 import java.util.HashSet;
@@ -13,8 +10,8 @@ import java.util.Set;
 @Getter
 @Setter
 @AllArgsConstructor
+@NoArgsConstructor
 @Entity
-@RequiredArgsConstructor
 public class Cart {
 
     @Id
