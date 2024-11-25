@@ -48,11 +48,11 @@ public class CartItemController {
         }
     }
 
-    @DeleteMapping("/{cartId}/item/{productId}/remove")
+    @DeleteMapping("/cartid/{cartId}/productid/{productId}/remove")
     public ResponseEntity<ApiResponse> removeItemFromCart (@PathVariable Long cartId, @PathVariable Long productId){
         try {
             cartItemService.removeItemFromCart(cartId, productId);
-            return ResponseEntity.ok(new ApiResponse("Add Item Success!", null));
+            return ResponseEntity.ok(new ApiResponse("Product remove from Cart!", null));
         } catch (ProductNotFoundException e) {
             return ResponseEntity.status(NOT_FOUND)
                     .body(new ApiResponse(e.getMessage(), null));
