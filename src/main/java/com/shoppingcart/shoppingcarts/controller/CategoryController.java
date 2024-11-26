@@ -24,7 +24,7 @@ public class CategoryController {
     private static final String CATEGORY_NAME_REGEX = "^[a-zA-Z\\s]+$"; // Only alphabetic characters and spaces allowed
 
 
-    @GetMapping("/all")
+    @GetMapping
     public ResponseEntity<ApiResponse> getAllServices(){
         try {
             List<Category> categories = categoryService.getAllCategories();
@@ -35,7 +35,7 @@ public class CategoryController {
         }
     }
 
-    @PostMapping("/add")
+    @PostMapping
     public ResponseEntity<ApiResponse> addCategory(@RequestBody Category name){
         try {
             String categoryName = name.getName();
@@ -53,7 +53,7 @@ public class CategoryController {
         }
     }
 
-    @GetMapping("/{categoryId}/category")
+    @GetMapping("/{categoryId}")
     public ResponseEntity<ApiResponse> getCategoryById (@PathVariable Long categoryId){
         try {
             Category theCategory = categoryService.getCategoryById(categoryId);
@@ -64,19 +64,19 @@ public class CategoryController {
         }
     }
 
-    @GetMapping("/category/{categoryName}/category")
-    public ResponseEntity<ApiResponse> getCategoryByName (@PathVariable String categoryName){
-        try {
-            Category theCategory = categoryService.getCategoryByName(categoryName);
-            return ResponseEntity.ok(new ApiResponse("Category Name Found!", theCategory));
-        } catch (ResouseNotFoundException e) {
-            return ResponseEntity.status(INTERNAL_SERVER_ERROR)
-                    .body(new ApiResponse("Can't find Categories Name", e.getMessage()));
-        }
-    }
+//    @GetMapping("/{categoryName}")
+//    public ResponseEntity<ApiResponse> getCategoryByName (@PathVariable String categoryName){
+//        try {
+//            Category theCategory = categoryService.getCategoryByName(categoryName);
+//            return ResponseEntity.ok(new ApiResponse("Category Name Found!", theCategory));
+//        } catch (ResouseNotFoundException e) {
+//            return ResponseEntity.status(INTERNAL_SERVER_ERROR)
+//                    .body(new ApiResponse("Can't find Categories Name", e.getMessage()));
+//        }
+//    }
 
 
-    @DeleteMapping("/category/{categoryId}/delete")
+    @DeleteMapping("/{categoryId}")
     public ResponseEntity<ApiResponse> deleteCategory (@PathVariable Long categoryId){
         try {
             categoryService.deleteCategoryById(categoryId);
@@ -88,7 +88,7 @@ public class CategoryController {
     }
 
 
-    @PutMapping("/category/{categoryId}/update")
+    @PutMapping("/{categoryId}")
     public ResponseEntity<ApiResponse> updateCategory (@PathVariable Long categoryId, @RequestBody Category category) {
         try {
             Category theCategory = categoryService.updateCategory(category, categoryId);

@@ -1,6 +1,7 @@
 package com.shoppingcart.shoppingcarts.service.category;
 
 import com.shoppingcart.shoppingcarts.exceptions.AlreadyExistsException;
+import com.shoppingcart.shoppingcarts.exceptions.InvalidRequest;
 import com.shoppingcart.shoppingcarts.exceptions.ResouseNotFoundException;
 import com.shoppingcart.shoppingcarts.model.Category;
 import com.shoppingcart.shoppingcarts.repository.CategoryRepository;
@@ -19,13 +20,14 @@ public class CategoryService  implements InterfaceCategoryService{
     @Override
     public Category getCategoryById(Long id) {
         return categoryRepository.findById(id)
-                .orElseThrow(() -> new ResouseNotFoundException("No category found for id " + id));
+                .orElseThrow(() -> new InvalidRequest("No category found for id " + id));
     }
-
-    @Override
-    public Category getCategoryByName(String name) {
-        return categoryRepository.findByName(name);
-    }
+//
+//    @Override
+//    public Category getCategoryByName(String name) {
+//        return Optional.ofNullable(categoryRepository.findByName(name))
+//                .orElseThrow(() -> new InvalidRequest("Category with name '" + name + "' not found!"));
+//    }
 
     @Override
     public List<Category> getAllCategories() {
@@ -54,7 +56,7 @@ public class CategoryService  implements InterfaceCategoryService{
     public void deleteCategoryById(Long id) {
         categoryRepository.findById(id)
                 .ifPresentOrElse(categoryRepository::delete, ()-> {
-                    throw new ResouseNotFoundException("No category found for id " + id);
+                    throw new InvalidRequest("No category found for id " + id);
                 });
     }
 }
