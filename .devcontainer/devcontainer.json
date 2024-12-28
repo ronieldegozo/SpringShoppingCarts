@@ -1,0 +1,8 @@
+{
+  "name": "My Java & MySQL DevContainer",
+  "build": {
+    "dockerfile": "Dockerfile"
+  },
+  "postCreateCommand": "sudo service mysql start",
+  "forwardPorts": [3306]
+}
