@@ -53,7 +53,7 @@ public class CategoryController {
         }
     }
 
-    @GetMapping("/{categoryId}")
+    @GetMapping("/id/{categoryId}")
     public ResponseEntity<ApiResponse> getCategoryById (@PathVariable Long categoryId){
         try {
             Category theCategory = categoryService.getCategoryById(categoryId);
@@ -64,16 +64,16 @@ public class CategoryController {
         }
     }
 
-//    @GetMapping("/{categoryName}")
-//    public ResponseEntity<ApiResponse> getCategoryByName (@PathVariable String categoryName){
-//        try {
-//            Category theCategory = categoryService.getCategoryByName(categoryName);
-//            return ResponseEntity.ok(new ApiResponse("Category Name Found!", theCategory));
-//        } catch (ResouseNotFoundException e) {
-//            return ResponseEntity.status(INTERNAL_SERVER_ERROR)
-//                    .body(new ApiResponse("Can't find Categories Name", e.getMessage()));
-//        }
-//    }
+   @GetMapping("/name/{categoryName}")
+   public ResponseEntity<ApiResponse> getCategoryByName (@PathVariable String categoryName){
+       try {
+           Category theCategory = categoryService.getCategoryByName(categoryName);
+           return ResponseEntity.ok(new ApiResponse("Category Name Found!", theCategory));
+       } catch (ResouseNotFoundException e) {
+           return ResponseEntity.status(INTERNAL_SERVER_ERROR)
+                   .body(new ApiResponse("Can't find Categories Name", e.getMessage()));
+       }
+   }
 
 
     @DeleteMapping("/{categoryId}")

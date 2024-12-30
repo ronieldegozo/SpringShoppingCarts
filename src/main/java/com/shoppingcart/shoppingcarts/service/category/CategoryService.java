@@ -22,12 +22,12 @@ public class CategoryService  implements InterfaceCategoryService{
         return categoryRepository.findById(id)
                 .orElseThrow(() -> new InvalidRequest("No category found for id " + id));
     }
-//
-//    @Override
-//    public Category getCategoryByName(String name) {
-//        return Optional.ofNullable(categoryRepository.findByName(name))
-//                .orElseThrow(() -> new InvalidRequest("Category with name '" + name + "' not found!"));
-//    }
+
+   @Override
+   public Category getCategoryByName(String name) {
+       return Optional.ofNullable(categoryRepository.findByName(name))
+               .orElseThrow(() -> new InvalidRequest("Category with name '" + name + "' not found!"));
+   }
 
     @Override
     public List<Category> getAllCategories() {
