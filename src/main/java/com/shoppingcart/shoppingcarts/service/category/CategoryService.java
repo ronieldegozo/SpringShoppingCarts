@@ -2,7 +2,7 @@ package com.shoppingcart.shoppingcarts.service.category;
 
 import com.shoppingcart.shoppingcarts.exceptions.AlreadyExistsException;
 import com.shoppingcart.shoppingcarts.exceptions.InvalidRequest;
-import com.shoppingcart.shoppingcarts.exceptions.ResouseNotFoundException;
+import com.shoppingcart.shoppingcarts.exceptions.ResourceNotFoundException;
 import com.shoppingcart.shoppingcarts.model.Category;
 import com.shoppingcart.shoppingcarts.repository.CategoryRepository;
 import lombok.RequiredArgsConstructor;
@@ -49,7 +49,7 @@ public class CategoryService  implements InterfaceCategoryService{
                     oldCategory.setName(category.getName());
                     return categoryRepository.save(oldCategory);
                 })
-                .orElseThrow(() -> new ResouseNotFoundException("Could not find category"));
+                .orElseThrow(() -> new ResourceNotFoundException("Could not find category"));
     }
 
     @Override

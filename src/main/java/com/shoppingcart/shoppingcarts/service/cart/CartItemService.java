@@ -1,6 +1,6 @@
 package com.shoppingcart.shoppingcarts.service.cart;
 
-import com.shoppingcart.shoppingcarts.exceptions.ResouseNotFoundException;
+import com.shoppingcart.shoppingcarts.exceptions.ResourceNotFoundException;
 import com.shoppingcart.shoppingcarts.model.Cart;
 import com.shoppingcart.shoppingcarts.model.CartItems;
 import com.shoppingcart.shoppingcarts.model.Product;
@@ -84,6 +84,6 @@ public class CartItemService implements CartItemServiceInterface{
                 .stream()
                 .filter(item -> item.getProduct().getId().equals(productId))
                 .findFirst()
-                .orElseThrow(() -> new ResouseNotFoundException("Product not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Product not found"));
     }
 }

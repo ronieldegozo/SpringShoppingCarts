@@ -1,7 +1,7 @@
 package com.shoppingcart.shoppingcarts.service.image;
 
 import com.shoppingcart.shoppingcarts.dto.ImageDto;
-import com.shoppingcart.shoppingcarts.exceptions.ResouseNotFoundException;
+import com.shoppingcart.shoppingcarts.exceptions.ResourceNotFoundException;
 import com.shoppingcart.shoppingcarts.model.Image;
 import com.shoppingcart.shoppingcarts.model.Product;
 import com.shoppingcart.shoppingcarts.repository.ImageRepository;
@@ -28,14 +28,14 @@ public class ImageService implements InterfaceImageService {
     @Override
     public Image getImageById(Long id) {
         return imageRepository.findById(id)
-                .orElseThrow(() -> new ResouseNotFoundException("No image found with id" + id));
+                .orElseThrow(() -> new ResourceNotFoundException("No image found with id" + id));
     }
 
     @Override
     public void deleteImageById(Long id) {
         imageRepository.findById(id).ifPresentOrElse(
                 imageRepository::delete,
-                () -> new ResouseNotFoundException("No image found with id" + id)
+                () -> new ResourceNotFoundException("No image found with id" + id)
         );
     }
 

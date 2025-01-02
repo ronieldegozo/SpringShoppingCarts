@@ -2,7 +2,7 @@ package com.shoppingcart.shoppingcarts.controller;
 
 import com.shoppingcart.shoppingcarts.exceptions.AlreadyExistsException;
 import com.shoppingcart.shoppingcarts.exceptions.InvalidRequest;
-import com.shoppingcart.shoppingcarts.exceptions.ResouseNotFoundException;
+import com.shoppingcart.shoppingcarts.exceptions.ResourceNotFoundException;
 import com.shoppingcart.shoppingcarts.model.Category;
 import com.shoppingcart.shoppingcarts.response.ApiResponse;
 import com.shoppingcart.shoppingcarts.service.category.InterfaceCategoryService;
@@ -58,7 +58,7 @@ public class CategoryController {
         try {
             Category theCategory = categoryService.getCategoryById(categoryId);
             return ResponseEntity.ok(new ApiResponse("Category Id Found!", theCategory));
-        } catch (ResouseNotFoundException e) {
+        } catch (ResourceNotFoundException e) {
             return ResponseEntity.status(INTERNAL_SERVER_ERROR)
                     .body(new ApiResponse(e.getMessage(), null));
         }
@@ -69,7 +69,7 @@ public class CategoryController {
        try {
            Category theCategory = categoryService.getCategoryByName(categoryName);
            return ResponseEntity.ok(new ApiResponse("Category Name Found!", theCategory));
-       } catch (ResouseNotFoundException e) {
+       } catch (ResourceNotFoundException e) {
            return ResponseEntity.status(INTERNAL_SERVER_ERROR)
                    .body(new ApiResponse("Can't find Categories Name", e.getMessage()));
        }
@@ -81,7 +81,7 @@ public class CategoryController {
         try {
             categoryService.deleteCategoryById(categoryId);
             return ResponseEntity.ok(new ApiResponse("Category Deleted!", null));
-        } catch (ResouseNotFoundException e) {
+        } catch (ResourceNotFoundException e) {
             return ResponseEntity.status(INTERNAL_SERVER_ERROR)
                     .body(new ApiResponse(e.getMessage(), null));
         }
@@ -93,7 +93,7 @@ public class CategoryController {
         try {
             Category theCategory = categoryService.updateCategory(category, categoryId);
             return ResponseEntity.ok(new ApiResponse("Category Name Found!", theCategory));
-        } catch (ResouseNotFoundException e) {
+        } catch (ResourceNotFoundException e) {
             return ResponseEntity.status(NOT_FOUND)
                     .body(new ApiResponse(e.getMessage(), null));
         }

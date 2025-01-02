@@ -34,9 +34,9 @@ public class OrderItem {
     private Product product;
 
 
-    public OrderItem(int quantity, BigDecimal price, Order order, Product product) {
-        this.quantity = quantity;
-        this.price = price;
+    public OrderItem(Order order2, Product product2, int order, BigDecimal product) {
+        this.quantity = order2;
+        this.price = product2;
         this.order = order;
         this.product = product;
     }

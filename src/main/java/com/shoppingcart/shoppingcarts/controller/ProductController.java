@@ -2,7 +2,7 @@ package com.shoppingcart.shoppingcarts.controller;
 
 import com.shoppingcart.shoppingcarts.dto.ProductDto;
 import com.shoppingcart.shoppingcarts.exceptions.ProductNotFoundException;
-import com.shoppingcart.shoppingcarts.exceptions.ResouseNotFoundException;
+import com.shoppingcart.shoppingcarts.exceptions.ResourceNotFoundException;
 import com.shoppingcart.shoppingcarts.model.Product;
 import com.shoppingcart.shoppingcarts.request.AddProductRequest;
 import com.shoppingcart.shoppingcarts.request.ProductUpdateRequest;
@@ -82,7 +82,7 @@ public class ProductController {
         try {
             Product updateProduct = productService.updateProduct(request, productId);
             return ResponseEntity.ok(new ApiResponse("Update Product Success!", updateProduct));
-        } catch (ResouseNotFoundException e) {
+        } catch (ResourceNotFoundException e) {
             return ResponseEntity.status(NOT_FOUND)
                     .body(new ApiResponse(e.getMessage(), null));
         }
@@ -93,7 +93,7 @@ public class ProductController {
         try {
             productService.deleteProductById(productId);
             return ResponseEntity.ok(new ApiResponse("Product Deleted!", null));
-        } catch (ResouseNotFoundException e) {
+        } catch (ResourceNotFoundException e) {
             return ResponseEntity.status(INTERNAL_SERVER_ERROR)
                     .body(new ApiResponse(e.getMessage(), null));
         }
