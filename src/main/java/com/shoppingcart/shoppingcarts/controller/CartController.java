@@ -1,11 +1,13 @@
 package com.shoppingcart.shoppingcarts.controller;
 
-import com.shoppingcart.shoppingcarts.exceptions.CartNotFoundException;
 import com.shoppingcart.shoppingcarts.exceptions.ProductNotFoundException;
 import com.shoppingcart.shoppingcarts.model.Cart;
 import com.shoppingcart.shoppingcarts.response.ApiResponse;
 import com.shoppingcart.shoppingcarts.service.cart.CartServiceInterface;
 import lombok.RequiredArgsConstructor;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
@@ -20,10 +22,12 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 public class CartController {
 
     public final CartServiceInterface cartService;
+        private static final Logger log = LoggerFactory.getLogger(CartController.class);
+
 
     //Get Cart ById
     @GetMapping("/{cartId}")
-    public ResponseEntity<ApiResponse> getCart (@PathVariable long cartId){
+    public ResponseEntity<ApiResponse> getCart (@PathVariable Long cartId){
         try {
             Cart cart = cartService.getCart(cartId);
             return ResponseEntity.ok(new ApiResponse("Success!", cart));
