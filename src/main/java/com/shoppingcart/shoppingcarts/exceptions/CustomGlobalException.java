@@ -4,6 +4,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+
+import java.time.LocalDateTime;
+
 import org.springframework.beans.factory.annotation.Value;
 
 
@@ -40,6 +43,7 @@ public class CustomGlobalException {
     public ResponseEntity<CustomErrorHandler> handleGenericException(Exception ex) {
         CustomErrorHandler errorResponse = new CustomErrorHandler(
                 generalErrorMessage,
+                LocalDateTime.now(),
                 HttpStatus.INTERNAL_SERVER_ERROR.value(),
                 getStackTrace(ex)
         );

@@ -79,14 +79,13 @@ public class ImageService implements InterfaceImageService {
     @Override
     public void updateImage(MultipartFile file, Long imageId) {
         Image image = getImageById(imageId);
-
-        try{
+        try {
             image.setFileName(file.getOriginalFilename());
-            image.setFileName(file.getOriginalFilename());
+            image.setFileType(file.getContentType());
             image.setImage(new SerialBlob(file.getBytes()));
             imageRepository.save(image);
-        }catch (IOException | SQLException e){
-            throw new RuntimeException("FAIL to save file: " + e.getMessage());
+        } catch (IOException | SQLException e) {
+            throw new RuntimeException(e.getMessage());
         }
 
     }

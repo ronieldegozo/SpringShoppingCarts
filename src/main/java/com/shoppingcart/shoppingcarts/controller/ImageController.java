@@ -72,7 +72,7 @@ public class ImageController {
 
             if(image != null){
                 imageService.updateImage(file, imageId);
-                return ResponseEntity.ok(new ApiResponse("Update Image successfully!", image));
+                return ResponseEntity.ok(new ApiResponse("Update Image successfully!", null));
             }
         } catch (ResouseNotFoundException e) {
             return ResponseEntity.status(NOT_FOUND)
