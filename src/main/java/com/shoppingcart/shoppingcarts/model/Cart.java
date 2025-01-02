@@ -24,6 +24,11 @@ public class Cart {
     @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<CartItems> cartItems = new HashSet<>();
 
+    @OneToOne //ONE TO ONE RELATIONSHIP BETWEEN CART AND USER
+    @JoinColumn(name = "user_id")
+    private User user;
+
+
     private void updateTotalAmount() {
         this.totalAmount = cartItems.stream().map(item -> {
             BigDecimal unitPrice = item.getUnitPrice();
