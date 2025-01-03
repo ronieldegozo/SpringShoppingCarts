@@ -2,8 +2,10 @@ package com.shoppingcart.shoppingcarts.service.user;
 
 import java.util.Optional;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import com.shoppingcart.shoppingcarts.dto.UserDto;
 import com.shoppingcart.shoppingcarts.exceptions.AlreadyExistsException;
 import com.shoppingcart.shoppingcarts.exceptions.ResourceNotFoundException;
 import com.shoppingcart.shoppingcarts.model.User;
@@ -19,7 +21,7 @@ import lombok.RequiredArgsConstructor;
 public class UserService implements InterfaceUserService {
 
     private final UserRepository userRepository;
-    
+    private final ModelMapper modelMapper;
     @Override
     public User getUserById(Long userId) {
         return userRepository.findById(userId).orElseThrow(
@@ -58,5 +60,10 @@ public class UserService implements InterfaceUserService {
             throw new ResourceNotFoundException("User not found!");
         });
     }
-    
+
+    @Override
+    public UserDto convertUserToDto(User user) {
+        return modelMapper.map(user, UserDto.class);
+    }
+
 }

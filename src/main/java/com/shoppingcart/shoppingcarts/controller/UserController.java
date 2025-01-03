@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.shoppingcart.shoppingcarts.dto.UserDto;
 import com.shoppingcart.shoppingcarts.exceptions.AlreadyExistsException;
 import com.shoppingcart.shoppingcarts.exceptions.UserNotFoundException;
 import com.shoppingcart.shoppingcarts.model.User;
@@ -38,7 +39,8 @@ public class UserController {
 
         try {
             User user = userService.getUserById(userId);
-            return  ResponseEntity.ok(new ApiResponse("User Found!", user));
+            UserDto userDto = userService.convertUserToDto(user);
+            return  ResponseEntity.ok(new ApiResponse("User Found!", userDto));
         } catch (UserNotFoundException e) {
             return ResponseEntity.status(NOT_FOUND)
                     .body(new ApiResponse(e.getMessage(), userId));
@@ -52,8 +54,9 @@ public class UserController {
         
         try {
             User user = userService.createUser(createUserRequest);
+            UserDto userDto = userService.convertUserToDto(user);
             return ResponseEntity.status(CREATED)
-                    .body(new ApiResponse("User created successfully!", user));
+                    .body(new ApiResponse("User created successfully!", userDto));
         } catch (AlreadyExistsException e) {
             return ResponseEntity.status(CONFLICT)
                     .body(new ApiResponse(e.getMessage(), null));
@@ -65,7 +68,8 @@ public class UserController {
     public ResponseEntity<ApiResponse> updateUser(@RequestBody UpdateUserRequest userUpdateRequest, @PathVariable Long userId) {
         try {
             User user = userService.updateUser(userUpdateRequest, userId);
-            return ResponseEntity.ok(new ApiResponse("User updated successfully!", user));
+            UserDto userDto = userService.convertUserToDto(user);
+            return ResponseEntity.ok(new ApiResponse("User updated successfully!", userDto));
         } catch (UserNotFoundException e) {
             return ResponseEntity.status(NOT_FOUND)
                     .body(new ApiResponse(e.getMessage(), null));
