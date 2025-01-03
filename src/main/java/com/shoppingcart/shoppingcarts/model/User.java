@@ -2,7 +2,7 @@ package com.shoppingcart.shoppingcarts.model;
 
 import java.util.List;
 
-import jakarta.annotation.Generated;
+import org.hibernate.annotations.NaturalId;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -28,6 +28,8 @@ public class User {
 
     private String firstName;
     private String lastName;
+
+    @NaturalId
     private String email;
     private String password;
     
