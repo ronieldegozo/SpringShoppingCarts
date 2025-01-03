@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.shoppingcart.shoppingcarts.dto.OrderDto;
 import com.shoppingcart.shoppingcarts.exceptions.ResourceNotFoundException;
 import com.shoppingcart.shoppingcarts.model.Order;
 import com.shoppingcart.shoppingcarts.response.ApiResponse;
@@ -39,7 +40,7 @@ public class OrderController {
     @GetMapping("/{orderId}")
     public ResponseEntity<ApiResponse> getOrderById (@PathVariable Long orderId){
         try {
-            Order order = orderService.getOrder(orderId);
+            OrderDto order = orderService.getOrder(orderId);
             return ResponseEntity.ok(new ApiResponse("Order Retrieve!", order));
         } catch (ResourceNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiResponse("Order Not Found!", e.getMessage()));
@@ -51,7 +52,7 @@ public class OrderController {
     @GetMapping("/{userId}")
     public ResponseEntity<ApiResponse> getUserById (@PathVariable Long userId){
         try {
-            List<Order> order = orderService.getUserOrders(userId);
+            List<OrderDto> order = orderService.getUserOrders(userId);
             return ResponseEntity.ok(new ApiResponse("Order Retrieve!", userId));
         } catch (ResourceNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiResponse("Order Not Found!", e.getMessage()));

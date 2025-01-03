@@ -6,8 +6,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.function.Function;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import com.shoppingcart.shoppingcarts.dto.OrderDto;
 import com.shoppingcart.shoppingcarts.enums.OrderStatus;
 import com.shoppingcart.shoppingcarts.exceptions.ResourceNotFoundException;
 import com.shoppingcart.shoppingcarts.model.Cart;
@@ -28,7 +30,7 @@ public class OrderService implements InterfaceOrderService {
     private final OrderRepository orderRepository;
     private final ProductRepository productRepository;
     private final CartService cartService;
-
+    private final ModelMapper modelMapper;
 
     @Override
     public Order placeOrder(Long userId) {
@@ -44,9 +46,10 @@ public class OrderService implements InterfaceOrderService {
     }
 
     @Override
-    public Order getOrder(Long orderId) {
+    public OrderDto getOrder(Long orderId) {
         return orderRepository.findById(orderId)
-            .orElseThrow(() -> new ResourceNotFoundException("Order Not Found!"));
+                        .map(this :: convertToDto)
+                        .orElseThrow(() -> new ResourceNotFoundException("Order not found"));
     }
 
     private Order createOrder (Cart cart){
@@ -80,7 +83,14 @@ public class OrderService implements InterfaceOrderService {
     }
 
   
-    public List<Order> getUserOrders (Long userId) {
-        return orderRepository.findByUserId(userId);
+    public List<OrderDto> getUserOrders (Long userId) {
+        List<Order> orders = orderRepository.findByUserId(userId);
+        return orders.stream()
+                    .map(this :: convertToDto)
+                    .toList();
+    }
+
+    private OrderDto convertToDto(Order order){
+        return modelMapper.map(order, OrderDto.class);
     }
 }
