@@ -13,7 +13,6 @@ import com.shoppingcart.shoppingcarts.dto.OrderDto;
 import com.shoppingcart.shoppingcarts.enums.OrderStatus;
 import com.shoppingcart.shoppingcarts.exceptions.ResourceNotFoundException;
 import com.shoppingcart.shoppingcarts.model.Cart;
-import com.shoppingcart.shoppingcarts.model.CartItems;
 import com.shoppingcart.shoppingcarts.model.Order;
 import com.shoppingcart.shoppingcarts.model.OrderItem;
 import com.shoppingcart.shoppingcarts.model.Product;
@@ -90,7 +89,8 @@ public class OrderService implements InterfaceOrderService {
                     .toList();
     }
 
-    private OrderDto convertToDto(Order order){
+    @Override
+    public OrderDto convertToDto(Order order){
         return modelMapper.map(order, OrderDto.class);
     }
 }
