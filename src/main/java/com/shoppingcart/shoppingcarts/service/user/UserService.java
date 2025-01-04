@@ -32,7 +32,7 @@ public class UserService implements InterfaceUserService {
     @Override
     public User createUser(CreateUserRequest createUserRequest) {
         return Optional.of(createUserRequest)
-                .filter(user -> !userRepository.existByEmail(user.getEmail()))
+                .filter(user -> !userRepository.existsByEmail(user.getEmail()))
                 .map(req -> {
                     User user = new User();
                     user.setFirstName(req.getFirstName());
