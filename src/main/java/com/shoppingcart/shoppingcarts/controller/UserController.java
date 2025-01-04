@@ -34,7 +34,7 @@ public class UserController {
     private final UserService userService;
 
     
-    @GetMapping("/userId")
+    @GetMapping("/{userId}")
     public ResponseEntity<ApiResponse> getUserById(@PathVariable Long userId) {
 
         try {

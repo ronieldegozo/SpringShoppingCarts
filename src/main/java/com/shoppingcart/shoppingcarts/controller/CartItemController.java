@@ -1,6 +1,9 @@
 package com.shoppingcart.shoppingcarts.controller;
 
 import com.shoppingcart.shoppingcarts.exceptions.ProductNotFoundException;
+import com.shoppingcart.shoppingcarts.model.Cart;
+import com.shoppingcart.shoppingcarts.model.User;
+import com.shoppingcart.shoppingcarts.repository.UserRepository;
 import com.shoppingcart.shoppingcarts.request.CartItemRequest;
 import com.shoppingcart.shoppingcarts.request.UpdateCartItemRequest;
 import com.shoppingcart.shoppingcarts.response.ApiResponse;
@@ -20,6 +23,7 @@ public class CartItemController {
 
     public final CartItemServiceInterface cartItemService;
     public final CartServiceInterface cartService;
+    public final UserRepository userRepository;
 
     /**
      * Add a new item to the cart
@@ -29,14 +33,14 @@ public class CartItemController {
      * @return ResponseEntity with success or failure message
      */
     @PostMapping
-    public ResponseEntity<ApiResponse> addCartItem (@PathVariable(required = false) Long cartId, @RequestBody CartItemRequest cartItemRequest) {
+    public ResponseEntity<ApiResponse> addCartItem (@RequestBody CartItemRequest cartItemRequest) {
 
         try {
-            if(cartId == null){
-                cartId = cartService.initializeNewCart();
-            }
+            
+            User user = userRepository.findById(1L).orElseThrow(() -> new ProductNotFoundException("User not found!"));
+            Cart cart = cartService.initializeNewCart(user);
 
-            cartItemService.addItemToCart(cartId, cartItemRequest.getProductId(), cartItemRequest.getQuantity());
+            cartItemService.addItemToCart(cart.getId(), cartItemRequest.getProductId(), cartItemRequest.getQuantity());
             return ResponseEntity.status(HttpStatus.CREATED).body(new ApiResponse("Item added to cart successfully!", null));
         } catch (ProductNotFoundException e) {
             return ResponseEntity.status(NOT_FOUND)
