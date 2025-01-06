@@ -1,5 +1,7 @@
 package com.shoppingcart.shoppingcarts.controller;
 
+import com.shoppingcart.shoppingcarts.dto.CartDto;
+import com.shoppingcart.shoppingcarts.dto.UserDto;
 import com.shoppingcart.shoppingcarts.exceptions.ProductNotFoundException;
 import com.shoppingcart.shoppingcarts.model.Cart;
 import com.shoppingcart.shoppingcarts.response.ApiResponse;
@@ -30,7 +32,8 @@ public class CartController {
     public ResponseEntity<ApiResponse> getCart (@PathVariable Long cartId){
         try {
             Cart cart = cartService.getCart(cartId);
-            return ResponseEntity.ok(new ApiResponse("Success!", cart));
+            CartDto cartDto = cartService.convertUserToDto(cart);
+            return ResponseEntity.ok(new ApiResponse("Success!", cartDto));
         } catch (ProductNotFoundException e) {
             return ResponseEntity.status(NOT_FOUND)
                     .body(new ApiResponse(e.getMessage(), null));

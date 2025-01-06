@@ -1,5 +1,7 @@
 package com.shoppingcart.shoppingcarts.service.cart;
 
+import com.shoppingcart.shoppingcarts.dto.CartDto;
+import com.shoppingcart.shoppingcarts.dto.UserDto;
 import com.shoppingcart.shoppingcarts.exceptions.CartNotFoundException;
 import com.shoppingcart.shoppingcarts.model.Cart;
 import com.shoppingcart.shoppingcarts.model.User;
@@ -8,6 +10,7 @@ import com.shoppingcart.shoppingcarts.repository.CartRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
+import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -22,9 +25,9 @@ public class CartService implements CartServiceInterface{
 
     private final CartRepository cartRepository;
     private final CartItemRepository cartItemRepository;
-    private final AtomicLong cartIdGenerator = new AtomicLong(0);
 
     private static final Logger log = LoggerFactory.getLogger(CartService.class);
+    private final ModelMapper modelMapper;
 
 
     @Override
@@ -66,5 +69,10 @@ public class CartService implements CartServiceInterface{
     @Override
     public Cart getCartByUserId(Long userId) {
         return cartRepository.findByUserId(userId);
+    }
+
+    @Override
+    public CartDto convertUserToDto(Cart cart) {
+        return modelMapper.map(cart, CartDto.class);
     }
 }

@@ -1,5 +1,6 @@
 package com.shoppingcart.shoppingcarts.service.cart;
 
+import com.shoppingcart.shoppingcarts.dto.CartDto;
 import com.shoppingcart.shoppingcarts.model.Cart;
 import com.shoppingcart.shoppingcarts.model.User;
 
@@ -12,4 +13,5 @@ public interface CartServiceInterface {
     BigDecimal getTotalPrice(Long id);
     Cart initializeNewCart(User user);
     Cart getCartByUserId(Long userId);
+    CartDto convertUserToDto(Cart cart);
 }
