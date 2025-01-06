@@ -7,5 +7,6 @@ public class CartItemRequest {
 
     private Long productId;
     private int quantity;
+    private Long userId;
 
 }

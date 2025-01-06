@@ -37,7 +37,7 @@ public class CartItemController {
 
         try {
             
-            User user = userRepository.findById(1L).orElseThrow(() -> new ProductNotFoundException("User not found!"));
+            User user = userRepository.findById(cartItemRequest.getUserId()).orElseThrow(() -> new ProductNotFoundException("User not found!"));
             Cart cart = cartService.initializeNewCart(user);
 
             cartItemService.addItemToCart(cart.getId(), cartItemRequest.getProductId(), cartItemRequest.getQuantity());
