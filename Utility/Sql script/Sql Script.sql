@@ -3,6 +3,18 @@ select * from shoppingcarts.category;
 select * from shoppingcarts.product;
 select * from shoppingcarts.cart;
 select * from shoppingcarts.cart_items;
+select * from shoppingcarts.user;
+select * from shoppingcarts.orders;
+select * from shoppingcarts.order_item;
+
+ALTER TABLE cart
+DROP COLUMN user_ids;
+
+ALTER TABLE cart
+DROP FOREIGN KEY FK9b9hna4p0adttm2k36uo6va45;
+
+ALTER TABLE cart
+DROP COLUMN user_ids;
 
 
 -- Delete image base on ids between
