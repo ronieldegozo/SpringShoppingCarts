@@ -2,6 +2,7 @@ package com.shoppingcart.shoppingcarts.service.product;
 
 import com.shoppingcart.shoppingcarts.dto.ImageDto;
 import com.shoppingcart.shoppingcarts.dto.ProductDto;
+import com.shoppingcart.shoppingcarts.exceptions.AlreadyExistsException;
 import com.shoppingcart.shoppingcarts.exceptions.ProductNotFoundException;
 import com.shoppingcart.shoppingcarts.model.Category;
 import com.shoppingcart.shoppingcarts.model.Image;
@@ -42,6 +43,10 @@ public class ProductService  implements InterfaceProductService{
 
         //else set the product a new product category
 
+        if(productExist(request.getName(), request.getBrand())){
+            throw new AlreadyExistsException("Product: " +  " " + request.getName() + " " + request.getBrand() + " already exists");
+        }
+
         Category category = Optional.ofNullable(categoryRepository.findByName(request.getCategory().getName()))
                 .orElseGet(() -> {
                     Category newCategory = new Category(request.getCategory().getName());
@@ -49,6 +54,11 @@ public class ProductService  implements InterfaceProductService{
                 });
         request.setCategory(category);
         return productRepository.save(createProduct(request, category));
+    }
+
+
+    private boolean productExist (String productName, String brandName){
+        return productRepository.existsByNameAndBrand(productName, brandName);
     }
 
     private Product createProduct(AddProductRequest request, Category category) {
