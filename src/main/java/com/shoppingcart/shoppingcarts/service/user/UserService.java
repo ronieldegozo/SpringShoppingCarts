@@ -1,10 +1,15 @@
 package com.shoppingcart.shoppingcarts.service.user;
 
+import java.security.Principal;
 import java.util.Optional;
 
 import org.modelmapper.ModelMapper;
+import org.springframework.boot.autoconfigure.neo4j.Neo4jProperties.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.nimbusds.jose.proc.SecurityContext;
 import com.shoppingcart.shoppingcarts.dto.UserDto;
 import com.shoppingcart.shoppingcarts.exceptions.AlreadyExistsException;
 import com.shoppingcart.shoppingcarts.exceptions.ResourceNotFoundException;
@@ -22,6 +27,9 @@ public class UserService implements InterfaceUserService {
 
     private final UserRepository userRepository;
     private final ModelMapper modelMapper;
+
+    private final PasswordEncoder passwordEncoder;
+
     @Override
     public User getUserById(Long userId) {
         return userRepository.findById(userId).orElseThrow(
@@ -38,7 +46,7 @@ public class UserService implements InterfaceUserService {
                     user.setFirstName(req.getFirstName());
                     user.setLastName(req.getLastName());
                     user.setEmail(req.getEmail());
-                    user.setPassword(req.getPassword());
+                    user.setPassword(passwordEncoder.encode(req.getPassword()));
                     return userRepository.save(user);
                 }).orElseThrow(() -> new AlreadyExistsException(createUserRequest.getEmail() + " User already exist"));
     }
@@ -65,5 +73,15 @@ public class UserService implements InterfaceUserService {
     public UserDto convertUserToDto(User user) {
         return modelMapper.map(user, UserDto.class);
     }
+
+    @Override
+    public User getAuthenticatedUser() {
+        Authentication authentication  = (Authentication) SecurityContextHolder.getContext().getAuthentication();
+        String email = ((Principal) authentication).getName();
+        return userRepository.findByEmail(email);
+    }
+
+    
+
 
 }

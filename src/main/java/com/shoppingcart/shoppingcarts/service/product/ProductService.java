@@ -35,14 +35,6 @@ public class ProductService  implements InterfaceProductService{
 
     @Override
     public Product addProduct(AddProductRequest request) {
-        //Check if category is found in the Database
-
-        //if yes add the product to the database
-
-        //else if create a new product
-
-        //else set the product a new product category
-
         if(productExist(request.getName(), request.getBrand())){
             throw new AlreadyExistsException("Product: " +  " " + request.getName() + " " + request.getBrand() + " already exists");
         }

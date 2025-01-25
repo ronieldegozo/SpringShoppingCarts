@@ -14,6 +14,7 @@ import org.springframework.stereotype.Component;
 import java.util.Date;
 import com.shoppingcart.shoppingcarts.security.user.UserDetail;
 
+
 @Component
 public class JwtUtils {
 
@@ -60,7 +61,7 @@ public class JwtUtils {
                     .build()
                     .parseClaimsJws(authToken);
             return true;
-        } catch (ExpiredJwtException | UnsupportedJwtException | MalformedJwtException | SignatureException| IllegalArgumentException e) {
+        } catch (ExpiredJwtException | UnsupportedJwtException | MalformedJwtException | SignatureException |IllegalArgumentException e) {
             throw new JwtException(e.getMessage());
         }
     }

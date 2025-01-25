@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -21,18 +22,20 @@ import com.shoppingcart.shoppingcarts.security.jwt.AuthTokenFilter;
 import com.shoppingcart.shoppingcarts.security.jwt.JwtEntryPoint;
 import com.shoppingcart.shoppingcarts.security.user.UserDetailService;
 
+import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
-
+@Transactional
 @EnableWebSecurity
 @RequiredArgsConstructor
 @Configuration
+@EnableMethodSecurity(prePostEnabled = true) //enable security 
 public class ShopConfig {
 
     private final UserDetailService userDetailService;
     private final JwtEntryPoint jwtEntryPoint;
 
     private static final List<String> SECURED_URLS =
-    List.of("/rest/v1/**", "/rest/v1/cartItems/**");
+    List.of("/rest/v1/cartItems/**");
 
     @Bean
     public ModelMapper modelMapper(){

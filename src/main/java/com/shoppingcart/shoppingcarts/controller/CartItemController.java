@@ -1,6 +1,7 @@
 package com.shoppingcart.shoppingcarts.controller;
 
 import com.shoppingcart.shoppingcarts.exceptions.ProductNotFoundException;
+import com.shoppingcart.shoppingcarts.exceptions.ResourceNotFoundException;
 import com.shoppingcart.shoppingcarts.model.Cart;
 import com.shoppingcart.shoppingcarts.model.User;
 import com.shoppingcart.shoppingcarts.repository.UserRepository;
@@ -9,12 +10,16 @@ import com.shoppingcart.shoppingcarts.request.UpdateCartItemRequest;
 import com.shoppingcart.shoppingcarts.response.ApiResponse;
 import com.shoppingcart.shoppingcarts.service.cart.CartItemServiceInterface;
 import com.shoppingcart.shoppingcarts.service.cart.CartServiceInterface;
+import com.shoppingcart.shoppingcarts.service.user.InterfaceUserService;
+
+import io.jsonwebtoken.JwtException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import static org.springframework.http.HttpStatus.NOT_FOUND;
+import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 
 @RestController
 @RequiredArgsConstructor
@@ -23,7 +28,7 @@ public class CartItemController {
 
     public final CartItemServiceInterface cartItemService;
     public final CartServiceInterface cartService;
-    public final UserRepository userRepository;
+    public final InterfaceUserService userService;
 
     /**
      * Add a new item to the cart
@@ -37,7 +42,8 @@ public class CartItemController {
 
         try {
             
-            User user = userRepository.findById(cartItemRequest.getUserId()).orElseThrow(() -> new ProductNotFoundException("User not found!"));
+            User user = userService.getAuthenticatedUser();
+            // findById(cartItemRequest.getUserId()).orElseThrow(() -> new ProductNotFoundException("User not found!"));
             Cart cart = cartService.initializeNewCart(user);
 
             cartItemService.addItemToCart(cart.getId(), cartItemRequest.getProductId(), cartItemRequest.getQuantity());
@@ -45,10 +51,14 @@ public class CartItemController {
         } catch (ProductNotFoundException e) {
             return ResponseEntity.status(NOT_FOUND)
                     .body(new ApiResponse(e.getMessage(), null));
-        }catch (Exception e) {
+        }catch (ResourceNotFoundException e) {
             // Handling any other unforeseen errors
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+            return ResponseEntity.status(HttpStatus.REQUEST_TIMEOUT)
                     .body(new ApiResponse("Failed to add item to cart", e.getMessage()));
+        }catch (JwtException e) {
+            // Handling any other unforeseen errors
+            return ResponseEntity.status(UNAUTHORIZED)
+                    .body(new ApiResponse(e.getMessage(), ""));
         }
     }
 

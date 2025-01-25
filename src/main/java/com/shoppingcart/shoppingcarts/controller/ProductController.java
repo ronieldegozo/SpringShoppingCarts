@@ -1,6 +1,7 @@
 package com.shoppingcart.shoppingcarts.controller;
 
 import com.shoppingcart.shoppingcarts.dto.ProductDto;
+import com.shoppingcart.shoppingcarts.exceptions.AlreadyExistsException;
 import com.shoppingcart.shoppingcarts.exceptions.ProductNotFoundException;
 import com.shoppingcart.shoppingcarts.exceptions.ResourceNotFoundException;
 import com.shoppingcart.shoppingcarts.model.Product;
@@ -11,6 +12,7 @@ import com.shoppingcart.shoppingcarts.service.product.InterfaceProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -66,18 +68,19 @@ public class ProductController {
      * @param product Product data
      * @return ResponseEntity with the status of the operation
      */
+    @PreAuthorize("hasRole('ROLE_ADMIN')") // only admin can add the product
     @PostMapping
     public ResponseEntity<ApiResponse> addProduct (@RequestBody AddProductRequest product){
         try {
             Product createdProduct = productService.addProduct(product);
             return ResponseEntity.status(HttpStatus.CREATED).body(new ApiResponse("Add Product Success!", createdProduct));
-        } catch (Exception e) {
+        } catch (AlreadyExistsException e) {
             return ResponseEntity.status(CONFLICT)
                     .body(new ApiResponse(e.getMessage(), null));
         }
     }
 
-
+    @PreAuthorize("hasRole('ADMIN')") // only admin can update the product
     @PutMapping("/product/{productId}/update")
     public ResponseEntity<ApiResponse> updateProduct (@RequestBody ProductUpdateRequest request, @PathVariable Long productId){
         try {
@@ -89,6 +92,7 @@ public class ProductController {
         }
     }
 
+    @PreAuthorize("hasRole('ADMIN')") // only admin can delete the product
     @DeleteMapping("/product/{productId}/delete")
     public ResponseEntity<ApiResponse> deleteProduct (@PathVariable Long productId){
         try {
