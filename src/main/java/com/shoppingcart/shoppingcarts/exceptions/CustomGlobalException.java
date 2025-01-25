@@ -2,8 +2,11 @@ package com.shoppingcart.shoppingcarts.exceptions;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+
+import com.shoppingcart.shoppingcarts.response.ApiResponse;
 
 import java.time.LocalDateTime;
 
@@ -60,4 +63,9 @@ public class CustomGlobalException {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
     }
 
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<ApiResponse> handleAccessDeniedException(AccessDeniedException ex) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .body(new ApiResponse("Unauthorized access: " + ex.getMessage(), null));
+    }
 }
