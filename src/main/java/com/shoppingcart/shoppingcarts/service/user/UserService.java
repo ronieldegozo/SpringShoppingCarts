@@ -2,6 +2,7 @@ package com.shoppingcart.shoppingcarts.service.user;
 
 import java.security.Principal;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.boot.autoconfigure.neo4j.Neo4jProperties.Authentication;
@@ -13,6 +14,7 @@ import com.nimbusds.jose.proc.SecurityContext;
 import com.shoppingcart.shoppingcarts.dto.UserDto;
 import com.shoppingcart.shoppingcarts.exceptions.AlreadyExistsException;
 import com.shoppingcart.shoppingcarts.exceptions.ResourceNotFoundException;
+import com.shoppingcart.shoppingcarts.model.Role;
 import com.shoppingcart.shoppingcarts.model.User;
 import com.shoppingcart.shoppingcarts.repository.UserRepository;
 import com.shoppingcart.shoppingcarts.request.CreateUserRequest;
@@ -72,6 +74,18 @@ public class UserService implements InterfaceUserService {
     @Override
     public UserDto convertUserToDto(User user) {
         return modelMapper.map(user, UserDto.class);
+    }
+
+    @Override
+    public UserDto convertCreatedUserToDto(User user) {
+        UserDto userDto = modelMapper.map(user, UserDto.class);
+
+        // Convert roles to just their names
+        userDto.setRoles(user.getRoles().stream()
+            .map(Role::getName)  // Get role name
+            .collect(Collectors.toList()));
+
+        return userDto;
     }
 
     @Override
