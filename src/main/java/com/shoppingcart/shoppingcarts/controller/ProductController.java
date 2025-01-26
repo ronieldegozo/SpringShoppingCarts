@@ -211,6 +211,7 @@ public class ProductController {
      * @param name
      * @return ResponseEntity containing a specific product
      */
+    @PreAuthorize("hasRole('ROLE_ADMIN')") // only admin can count the product
     @GetMapping("/count")
     public ResponseEntity<ApiResponse> countProductsByBrandAndName (@RequestParam String brand, @RequestParam String name){
         try {

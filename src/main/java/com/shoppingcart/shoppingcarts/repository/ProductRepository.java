@@ -1,5 +1,6 @@
 package com.shoppingcart.shoppingcarts.repository;
 
+import com.shoppingcart.shoppingcarts.model.Category;
 import com.shoppingcart.shoppingcarts.model.Product;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -19,4 +20,6 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     Long countByBrandAndName(String brand, String name);
 
     boolean existsByNameAndBrand(String name, String brand);
+
+    boolean existsByCategory(Category category);
 }

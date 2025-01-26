@@ -10,9 +10,11 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
+import com.shoppingcart.shoppingcarts.exceptions.AlreadyExistsException;
 import com.shoppingcart.shoppingcarts.model.Role;
 import com.shoppingcart.shoppingcarts.model.User;
 import com.shoppingcart.shoppingcarts.repository.UserRepository;
+import com.shoppingcart.shoppingcarts.request.CreateUserRequest;
 
 import jakarta.transaction.Transactional;
 
@@ -80,5 +82,38 @@ public class DataInitializer implements ApplicationListener<ApplicationReadyEven
                 .filter(role -> roleRepository.findByName(role).isEmpty())
                 .map(Role:: new).forEach(roleRepository::save);
 
+    }
+
+    public User createUserAccess(CreateUserRequest request, Role role) {
+        // Check if the email already exists
+        if (userRepository.existsByEmail(request.getEmail())) {
+            throw new AlreadyExistsException("User with email " + request.getEmail() + " already exists.");
+        }
+
+        // Create the new user
+        User user = new User();
+        user.setFirstName(request.getFirstName());
+        user.setLastName(request.getLastName());
+        user.setEmail(request.getEmail());
+        user.setPassword(passwordEncoder.encode(request.getPassword())); // Use password from API request
+        user.setRoles(Set.of(role));
+
+        return userRepository.save(user);
+    }
+    
+    /**
+     * Finds a role by its name or creates it if it doesn't exist.
+     * @param roleName The name of the role (e.g., "ROLE_ADMIN", "ROLE_USER").
+     * @return The Role entity.
+     */
+    public Role findOrCreateRole(String roleName) {
+        // Check if the role already exists
+        return roleRepository.findByName(roleName)
+                .orElseGet(() -> {
+                    // If not found, create and save a new role
+                    Role newRole = new Role();
+                    newRole.setName(roleName);
+                    return roleRepository.save(newRole);
+                });
     }
 }

@@ -12,6 +12,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -33,6 +34,7 @@ public class ImageController {
      * Endpoint: http://localhost:5000/rest/v1/images?product=productId
      * @return ResponseEntity with the status of the operation
      */
+    @PreAuthorize("hasRole('ROLE_ADMIN')") // only admin can add the image to product
     @PostMapping("/{productId}")
     public ResponseEntity<ApiResponse> saveImagesInProductId (@RequestParam List<MultipartFile> files, @PathVariable Long productId){
         try {
@@ -65,6 +67,7 @@ public class ImageController {
      * @param imageId Image Id
      * @return ResponseEntity with the status of the operation
      */
+    @PreAuthorize("hasRole('ROLE_ADMIN')") // only admin can update the image to product
     @PutMapping("/{imageId}")
     public ResponseEntity<ApiResponse> updateImage (@PathVariable Long imageId, @RequestBody MultipartFile file){
         try {
@@ -82,6 +85,7 @@ public class ImageController {
                 .body(new ApiResponse("Images Upload failed", INTERNAL_SERVER_ERROR));
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')") // only admin can delete the image to product
     @DeleteMapping("/image/{imageId}/delete")
     public ResponseEntity<ApiResponse> deleteImage (@PathVariable Long imageId){
         try {

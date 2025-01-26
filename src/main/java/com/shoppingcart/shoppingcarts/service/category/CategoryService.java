@@ -5,6 +5,8 @@ import com.shoppingcart.shoppingcarts.exceptions.InvalidRequest;
 import com.shoppingcart.shoppingcarts.exceptions.ResourceNotFoundException;
 import com.shoppingcart.shoppingcarts.model.Category;
 import com.shoppingcart.shoppingcarts.repository.CategoryRepository;
+import com.shoppingcart.shoppingcarts.repository.ProductRepository;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +18,8 @@ import java.util.Optional;
 public class CategoryService  implements InterfaceCategoryService{
 
     private final CategoryRepository categoryRepository;
+
+    private final ProductRepository productRepository;
 
     @Override
     public Category getCategoryById(Long id) {
@@ -54,9 +58,14 @@ public class CategoryService  implements InterfaceCategoryService{
 
     @Override
     public void deleteCategoryById(Long id) {
-        categoryRepository.findById(id)
-                .ifPresentOrElse(categoryRepository::delete, ()-> {
-                    throw new InvalidRequest("No category found for id " + id);
-                });
+        Category category = categoryRepository.findById(id)
+                            .orElseThrow(() -> new InvalidRequest("No category found for id " + id));
+
+        boolean isReferenced = productRepository.existsByCategory(category);
+
+        if (isReferenced) {
+            throw new InvalidRequest("Category ID " + id + " has product references.");
+        }
+        categoryRepository.delete(category);
     }
 }

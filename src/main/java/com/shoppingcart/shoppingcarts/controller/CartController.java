@@ -1,7 +1,6 @@
 package com.shoppingcart.shoppingcarts.controller;
 
 import com.shoppingcart.shoppingcarts.dto.CartDto;
-import com.shoppingcart.shoppingcarts.dto.UserDto;
 import com.shoppingcart.shoppingcarts.exceptions.ProductNotFoundException;
 import com.shoppingcart.shoppingcarts.model.Cart;
 import com.shoppingcart.shoppingcarts.response.ApiResponse;
@@ -11,7 +10,6 @@ import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;

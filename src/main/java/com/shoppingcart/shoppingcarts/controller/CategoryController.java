@@ -8,6 +8,7 @@ import com.shoppingcart.shoppingcarts.response.ApiResponse;
 import com.shoppingcart.shoppingcarts.service.category.InterfaceCategoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -35,6 +36,7 @@ public class CategoryController {
         }
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')") // only admin can add the category
     @PostMapping
     public ResponseEntity<ApiResponse> addCategory(@RequestBody Category name){
         try {
@@ -75,7 +77,7 @@ public class CategoryController {
        }
    }
 
-
+    @PreAuthorize("hasRole('ROLE_ADMIN')") // only admin can delete the category
     @DeleteMapping("/{categoryId}")
     public ResponseEntity<ApiResponse> deleteCategory (@PathVariable Long categoryId){
         try {
@@ -87,7 +89,7 @@ public class CategoryController {
         }
     }
 
-
+    @PreAuthorize("hasRole('ROLE_ADMIN')") // only admin can update the category
     @PutMapping("/{categoryId}")
     public ResponseEntity<ApiResponse> updateCategory (@PathVariable Long categoryId, @RequestBody Category category) {
         try {
