@@ -38,24 +38,24 @@ For order processing, the API enables users to create orders, add items, and cal
 ### 👤 User Management
 | Method | Endpoint | Description |
 |--------|---------|-------------|
-| `POST` | `/api/users/register` | 📝 Register a new user |
-| `GET`  | `/api/users` | 🔍 Get all users (Admin only) |
-| `PUT`  | `/api/users/{id}` | ✏️ Update user details |
-| `DELETE` | `/api/users/{id}` | ❌ Delete user (Admin only) |
+| `POST` | `/rest/v1/users/register` | 📝 Register a new user |
+| `GET`  | `/rest/v1/users` | 🔍 Get all users (Admin only) |
+| `PUT`  | `/rest/v1/users/{id}` | ✏️ Update user details |
+| `DELETE` | `/rest/v1/users/{id}` | ❌ Delete user (Admin only) |
 
 ### 📦 Product Management
 | Method | Endpoint | Description |
 |--------|---------|-------------|
-| `GET`  | `/api/products` | 📋 Get all products |
-| `PUT`  | `/api/products/{id}` | 🛠️ Update product details |
-| `GET`  | `/api/products/filter` | 🔎 Filter products |
+| `GET`  | `/rest/v1/products` | 📋 Get all products |
+| `PUT`  | `/rest/v1/products/{id}` | 🛠️ Update product details |
+| `GET`  | `/rest/v1/products/filter` | 🔎 Filter products |
 
 ### 🛍️ Order Management
 | Method | Endpoint | Description |
 |--------|---------|-------------|
-| `POST` | `/api/orders` | 🆕 Create a new order |
-| `PUT`  | `/api/orders/{id}/add` | ➕ Add items to an order |
-| `GET`  | `/api/orders/{id}/calculate` | 💰 Calculate order total |
+| `POST` | `/rest/v1/orders` | 🆕 Create a new order |
+| `PUT`  | `/rest/v1/orders/{id}/add` | ➕ Add items to an order |
+| `GET`  | `/rest/v1/orders/{id}/calculate` | 💰 Calculate order total |
 
 ## 🏗 Setup and Installation
 
