@@ -79,7 +79,3 @@ For order processing, the API enables users to create orders, add items, and cal
 ## 📜 License
 This project is licensed under the MIT License.
 
----
-
-🎨 _Icons and further details can be customized as needed._
-
